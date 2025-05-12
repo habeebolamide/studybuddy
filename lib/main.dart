@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:studybuddy/screens/auth/login.dart';
+import 'package:studybuddy/screens/auth/register.dart';
 import './screens/onboarding.dart';
 void main() {
   runApp(const MyApp());
@@ -15,6 +16,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => OnboardingScreen(),
         '/login': (context) => LoginPage(),
+        '/register': (context) => RegisterPage(),
       },
     );
   }

@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
+const Color primaryColor = Color(0xFF6C3DFF); // Purple
+const Color accentPink = Color(0xFFFF4FD8);   // Pink
+const Color accentBlue = Color(0xFF3DBEFF);   // Blue
+const Color backgroundColor = Color(0xFFF9F9FB);
+const Color darkTextColor = Color(0xFF1C1C2E);
+
 class OnboardingScreen extends StatefulWidget {
   @override
   _OnboardingScreenState createState() => _OnboardingScreenState();
@@ -13,7 +19,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: backgroundColor,
       body: Stack(
         children: [
           PageView(
@@ -25,17 +31,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             },
             children: [
               buildPage(
-                image: 'assets/stu1.jpg',
+                image: 'assets/Personalized.png',
                 title: "Personalized Learning Goals",
                 description: "Set your own academic goals and track your daily progress effortlessly.",
               ),
               buildPage(
-                image: 'assets/schedule.jpg',
+                image: 'assets/Scheduler.jpg',
                 title: "Organized Study Scheduler",
                 description: "Plan smarter with a visual calendar that keeps your study time structured and efficient.",
               ),
               buildPage(
-                image: 'assets/student.png',
+                image: 'assets/AI.jpg',
                 title: "Chat with Your AI Tutor",
                 description: "Get instant help, summaries, and quizzes from your smart study assistant.",
               ),
@@ -51,7 +57,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               child: SmoothPageIndicator(
                 controller: _controller,
                 count: 3,
-                effect: WormEffect(dotColor: Colors.grey, activeDotColor: Colors.pink),
+                effect: WormEffect(
+                  dotColor: Colors.grey.shade300,
+                  activeDotColor: primaryColor,
+                ),
               ),
             ),
           ),
@@ -62,7 +71,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             left: 20,
             child: GestureDetector(
               onTap: () => _controller.jumpToPage(2),
-              child: Text("Skip", style: TextStyle(color: Colors.pink)),
+              child: Text(
+                "Skip",
+                style: TextStyle(
+                  color: accentBlue,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
             ),
           ),
 
@@ -72,11 +88,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             right: 20,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.pink,
+                backgroundColor: primaryColor,
+                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
               ),
               onPressed: () {
                 if (onLastPage) {
-                   Navigator.pushReplacementNamed(context, '/login');
+                  Navigator.pushReplacementNamed(context, '/login');
                 } else {
                   _controller.nextPage(
                     duration: Duration(milliseconds: 500),
@@ -84,7 +104,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   );
                 }
               },
-              child: Text(onLastPage ? "Sign up" : "Next"),
+              child: Text(
+                onLastPage ? "Sign up" : "Next",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+              ),
             ),
           ),
         ],
@@ -92,22 +115,36 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
-  Widget buildPage({required String image, required String title, required String description}) {
+  Widget buildPage({
+    required String image,
+    required String title,
+    required String description,
+  }) {
     return Container(
       padding: EdgeInsets.all(24),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
-              decoration: BoxDecoration(
-
-              ),
-          ),
-          Image.asset(image, height: 500),
+          Image.asset(image, height: 360),
           SizedBox(height: 40),
-          Text(title, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold,color: Colors.black)),
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              color: darkTextColor,
+            ),
+            textAlign: TextAlign.center,
+          ),
           SizedBox(height: 20),
-          Text(description, textAlign: TextAlign.center, style: TextStyle(color: Colors.pink),),
+          Text(
+            description,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: primaryColor,
+              fontSize: 16,
+            ),
+          ),
         ],
       ),
     );

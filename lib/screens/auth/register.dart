@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisterPageState extends State<RegisterPage> {
   var _deviceHeight;
   var _deviceWidth;
 
@@ -33,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
 Widget _loginLogoWidget() {
   return SafeArea(
     child: SizedBox(
-      height: _deviceHeight * 0.38,
+      height: _deviceHeight * 0.20,
       width: _deviceWidth,
       child: Image.asset(
         'assets/logo.png',
@@ -59,7 +59,7 @@ Widget _loginFormWidget() {
 
         children: [
           Text(
-            'Welcome Back',
+            'Create An Account',
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
@@ -67,7 +67,46 @@ Widget _loginFormWidget() {
             ),
           ),
           SizedBox(height: 32),
-
+          // FirstName Field
+          TextFormField(
+            decoration: InputDecoration(
+              labelText: 'First Name',
+              prefixIcon: const Icon(Icons.people_alt),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              filled: true,
+              fillColor: Colors.grey[50],
+            ),
+            keyboardType: TextInputType.emailAddress,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your name';
+              }
+              return null;
+            },
+          ),
+          SizedBox(height: 16),
+          // Username Field
+          TextFormField(
+            decoration: InputDecoration(
+              labelText: 'User Name',
+              prefixIcon: const Icon(Icons.people_alt),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              filled: true,
+              fillColor: Colors.grey[50],
+            ),
+            keyboardType: TextInputType.emailAddress,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your name';
+              }
+              return null;
+            },
+          ),
+          SizedBox(height: 16),
           // Email Field
           TextFormField(
             decoration: InputDecoration(
@@ -117,7 +156,33 @@ Widget _loginFormWidget() {
               return null;
             },
           ),
+          SizedBox(height: 16),
 
+          TextFormField(
+            decoration: InputDecoration(
+              labelText: 'Confirm Password',
+              prefixIcon: const Icon(Icons.lock),
+              suffixIcon: IconButton(
+                icon: const Icon(Icons.visibility_outlined),
+                onPressed: () {}, // Add password visibility toggle
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              filled: true,
+              fillColor: Colors.grey[50],
+            ),
+            obscureText: true,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your password';
+              }
+              if (value.length < 6) {
+                return 'Password must be at least 6 characters';
+              }
+              return null;
+            },
+          ),
           const SizedBox(height: 20),
 
           ElevatedButton(
@@ -162,27 +227,6 @@ Widget _loginFormWidget() {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                     side: BorderSide(color: Colors.grey[300]!),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          
-          // Sign Up
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text("Don't have an account?"),
-              TextButton(
-                onPressed: () {
-                  Navigator.pushReplacementNamed(context, '/register');
-                }, // Add navigation to sign up
-                child: const Text(
-                  'Sign Up',
-                  style: TextStyle(
-                    color: Colors.blueAccent,
-                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
