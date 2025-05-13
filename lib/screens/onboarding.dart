@@ -69,8 +69,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           Positioned(
             bottom: 30,
             left: 20,
-            child: GestureDetector(
-              onTap: () => _controller.jumpToPage(2),
+            child: ElevatedButton(
+              onPressed: () {
+                _controller.jumpToPage(2);
+              },
               child: Text(
                 "Skip",
                 style: TextStyle(

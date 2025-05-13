@@ -37,6 +37,12 @@ dependencies:
   smooth_page_indicator: ^1.2.1
   http: ^1.4.0
   shared_preferences: ^2.5.3
+  flutter_native_splash: ^2.4.6
+
+flutter_native_splash:
+  image: assets/logo.png
+  color: "#ffffff"
+
 
 dev_dependencies:
   flutter_test:

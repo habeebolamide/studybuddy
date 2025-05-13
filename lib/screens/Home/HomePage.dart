@@ -15,7 +15,14 @@ class _HomePageState extends State<HomePage> {
           title: Text('Awesome Quotes'),
           centerTitle: true,
           backgroundColor: Colors.red[600],
+        
         ),
+
+        body: ElevatedButton(onPressed: (){
+          Navigator.pushReplacementNamed(context, '/login');
+
+        }, 
+        child:Text("yooo") ),
     );
   }
 }
