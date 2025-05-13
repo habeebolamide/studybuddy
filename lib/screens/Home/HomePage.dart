@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:studybuddy/layout.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -10,19 +11,13 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-          appBar: AppBar(
-          title: Text('Awesome Quotes'),
-          centerTitle: true,
-          backgroundColor: Colors.red[600],
-        
-        ),
-
-        body: ElevatedButton(onPressed: (){
-          Navigator.pushReplacementNamed(context, '/login');
-
-        }, 
-        child:Text("yooo") ),
+    return MaterialApp(
+      title: 'StudyBuddy',
+      theme: ThemeData(
+        primarySwatch: Colors.deepPurple,
+        useMaterial3: true,
+      ),
+      home: const Layout(), // Set Layout as the home screen
     );
   }
 }

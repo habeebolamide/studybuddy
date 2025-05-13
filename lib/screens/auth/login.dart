@@ -200,7 +200,7 @@ class _LoginPageState extends State<LoginPage> {
         if (res.statusCode == 200) {
           SharedPreferences localStorage = await SharedPreferences.getInstance();
           localStorage.setString('token', jsonEncode(body));
-          Navigator.pushReplacementNamed(context, '/home'); // Or your home route
+          Navigator.pushReplacementNamed(context, '/home'); 
         } else {
           _showError(body['message'] ?? 'Login failed');
         }

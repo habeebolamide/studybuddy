@@ -38,6 +38,7 @@ dependencies:
   http: ^1.4.0
   shared_preferences: ^2.5.3
   flutter_native_splash: ^2.4.6
+  font_awesome_flutter: '>= 4.7.0'
 
 flutter_native_splash:
   image: assets/logo.png
