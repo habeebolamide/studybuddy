@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:studybuddy/layout.dart';
 import 'package:studybuddy/screens/auth/login.dart';
 import 'package:studybuddy/screens/auth/register.dart';
+import 'package:studybuddy/screens/components/upload.dart';
 import './screens/onboarding.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => CheckAuth(),
         '/login': (context) => LoginPage(),
         '/register': (context) => RegisterPage(),
-        // '/home': (context) => HomePage(),
+        '/create': (context) => UploadDocs(),
       },
     );
   }

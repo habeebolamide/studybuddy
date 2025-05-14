@@ -22,7 +22,8 @@ class _DashboardState extends State<Dashboard> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             _topLayerWidget(),
-            Expanded(child: SingleChildScrollView(child: _dashboardActions())),
+            _dashboardActions()
+            // Expanded(child: SingleChildScrollView(child:)),
           ],
         ),
       ),
@@ -70,50 +71,81 @@ class _DashboardState extends State<Dashboard> {
   Widget _dashboardActions() {
     return Container(
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 50.0, vertical: 35.0),
+        padding: EdgeInsets.symmetric(
+          horizontal: _deviceWidth * 0.02,
+          vertical: _deviceHeight * 0.06,
+        ),
 
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            _dashboardCard(FontAwesomeIcons.upload, "Learn", Color(0xFFF052C6)),
-            _dashboardCard(FontAwesomeIcons.book, "Learn", Colors.blue),
-            _dashboardCard(FontAwesomeIcons.brain, "Learn", Colors.deepPurple)
+            _dashboardCard(FontAwesomeIcons.upload, "Upload", [
+              Color(0xFF6D3EDD),
+              Color(0xFFF052C6),
+            ], _deviceHeight,'/create'),
+            _dashboardCard(FontAwesomeIcons.book, "Create", [
+              Colors.blue,
+              Colors.blue,
+            ], _deviceHeight,'/create'),
+            _dashboardCard(FontAwesomeIcons.brain, "Quiz", [
+              Colors.deepPurple,
+              Colors.deepPurple,
+            ], _deviceHeight,'/create'),
           ],
         ),
       ),
     );
   }
 
-  Widget _dashboardCard(IconData icon, String label, Color color) {
-    return ElevatedButton(
-      onPressed: (){}, 
-      style: ElevatedButton.styleFrom(
-        backgroundColor: color,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+  Widget _dashboardCard(
+    IconData icon,
+    String label,
+    List<Color> gradientColors,
+    double _deviceHeight,
+    String Url
+  ) {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: gradientColors,
         ),
-        elevation: 0,
+        borderRadius: BorderRadius.circular(10),
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SizedBox(height: _deviceHeight * 0.01),
-
-          Icon(
-            icon,
-            size: 50,
-            color: Colors.white,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(10),
+          onTap: () {
+            Navigator.pushReplacementNamed(context, Url); 
+          },
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              vertical: _deviceHeight * 0.025,
+              horizontal: _deviceWidth * 0.08,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(icon, size: 30, color: Colors.white),
+                SizedBox(height: _deviceHeight * 0.01),
+                Text(
+                  label,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
           ),
-          SizedBox(height: _deviceHeight * 0.01),
-          Text("yoooo", style: TextStyle(
-            color: Colors.white,
-            fontSize: 16,
-            fontWeight: FontWeight.w600
-          )),
-          SizedBox(height: _deviceHeight * 0.01),
-
-        ]
-      )
+        ),
+      ),
     );
+  }
+  Widget Analytics() {
+    return Container();
   }
 }
