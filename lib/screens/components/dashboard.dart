@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -21,11 +22,7 @@ class _DashboardState extends State<Dashboard> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             _topLayerWidget(),
-            // Expanded(
-            //   child: SingleChildScrollView(
-            //     child: _loginFormWidget(),
-            //   ),
-            // ),
+            Expanded(child: SingleChildScrollView(child: _dashboardActions())),
           ],
         ),
       ),
@@ -67,6 +64,56 @@ class _DashboardState extends State<Dashboard> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _dashboardActions() {
+    return Container(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 50.0, vertical: 35.0),
+
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _dashboardCard(FontAwesomeIcons.upload, "Learn", Color(0xFFF052C6)),
+            _dashboardCard(FontAwesomeIcons.book, "Learn", Colors.blue),
+            _dashboardCard(FontAwesomeIcons.brain, "Learn", Colors.deepPurple)
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _dashboardCard(IconData icon, String label, Color color) {
+    return ElevatedButton(
+      onPressed: (){}, 
+      style: ElevatedButton.styleFrom(
+        backgroundColor: color,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+        ),
+        elevation: 0,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(height: _deviceHeight * 0.01),
+
+          Icon(
+            icon,
+            size: 50,
+            color: Colors.white,
+          ),
+          SizedBox(height: _deviceHeight * 0.01),
+          Text("yoooo", style: TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.w600
+          )),
+          SizedBox(height: _deviceHeight * 0.01),
+
+        ]
+      )
     );
   }
 }

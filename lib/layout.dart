@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:studybuddy/screens/components/dashboard.dart';
+import 'package:studybuddy/screens/components/profile.dart';
 
 class Layout extends StatefulWidget {
   const Layout({super.key});
@@ -23,7 +24,7 @@ class _LayoutState extends State<Layout> {
     Center(child: Text('Summarize111')),
     Center(child: Text('Quiz')),
     Center(child: Text('Progress')),
-    Center(child: Text('Profile')),
+    Profile()
   ];
 
   @override
