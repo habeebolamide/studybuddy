@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:studybuddy/screens/Home/HomePage.dart';
+import 'package:studybuddy/layout.dart';
 import 'package:studybuddy/screens/auth/login.dart';
 import 'package:studybuddy/screens/auth/register.dart';
 import './screens/onboarding.dart';
@@ -17,10 +17,11 @@ class MyApp extends StatelessWidget {
      return MaterialApp(
       initialRoute: '/',
       routes: {
-        '/': (context) => OnboardingScreen(),
+        // '/': (context) => OnboardingScreen(),
+        '/': (context) => CheckAuth(),
         '/login': (context) => LoginPage(),
         '/register': (context) => RegisterPage(),
-        '/home': (context) => HomePage(),
+        // '/home': (context) => HomePage(),
       },
     );
   }
@@ -53,7 +54,7 @@ class _CheckAuthState extends State<CheckAuth> {
   Widget build(BuildContext context) {
     Widget child;
     if (isAuth) {
-      child = HomePage();
+      child = Layout();
     } else {
       child = LoginPage();
     }

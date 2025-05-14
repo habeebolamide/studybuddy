@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:studybuddy/screens/components/dashboard.dart';
 
 class Layout extends StatefulWidget {
   const Layout({super.key});
@@ -18,7 +19,7 @@ class _LayoutState extends State<Layout> {
   }
 
   static const List<Widget> _pages = <Widget>[
-    Center(child: Text('Home')),
+    Dashboard(),
     Center(child: Text('Summarize111')),
     Center(child: Text('Quiz')),
     Center(child: Text('Progress')),
@@ -28,7 +29,7 @@ class _LayoutState extends State<Layout> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF6F5FF),
+      backgroundColor:Color(0xFFF6F5FF),
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
