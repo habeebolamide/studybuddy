@@ -118,7 +118,11 @@ class _DashboardState extends State<Dashboard> {
         child: InkWell(
           borderRadius: BorderRadius.circular(10),
           onTap: () {
-            Navigator.pushReplacementNamed(context, Url); 
+            Navigator.pushNamed(
+                      context,
+                      Url
+                    );
+            // Navigator.pushReplacementNamed(context, Url); 
           },
           child: Padding(
             padding: EdgeInsets.symmetric(
