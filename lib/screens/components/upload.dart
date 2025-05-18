@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:auto_route/auto_route.dart';
 
-class UploadDocs extends StatefulWidget {
-  const UploadDocs({super.key});
+@RoutePage()
+class UploadDocsScreen extends StatefulWidget {
+  const UploadDocsScreen({super.key});
 
   @override
-  State<UploadDocs> createState() => _UploadDocsState();
+  State<UploadDocsScreen> createState() => _UploadDocsScreenState();
 }
 
-class _UploadDocsState extends State<UploadDocs> {
+class _UploadDocsScreenState extends State<UploadDocsScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final Map<String, TextEditingController> _controller = {
     'course_name': TextEditingController(),
@@ -115,8 +117,8 @@ class _UploadDocsState extends State<UploadDocs> {
                   SizedBox(height: 16),
 
                   TextButton(
-                    onPressed: ()  {
-                      pickFile();
+                    onPressed: () {
+                      // pickFile();
                     },
                     child: Text("Upload"),
                   ),
@@ -137,7 +139,7 @@ class _UploadDocsState extends State<UploadDocs> {
                       ),
                     ),
                     child: Text(
-                      "Upload file",
+                      "Create",
                       style: TextStyle(color: Colors.white, fontSize: 22),
                     ),
                   ),
@@ -153,18 +155,17 @@ class _UploadDocsState extends State<UploadDocs> {
   }
 
   void pickFile() async {
-  FilePickerResult? result = await FilePicker.platform.pickFiles();
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
 
-  if (result != null) {
-    PlatformFile file = result.files.first;
+    if (result != null) {
+      PlatformFile file = result.files.first;
 
-    print('File Name: ${file.name}');
-    print('File Size: ${file.size}');
-    print('File Path: ${file.path}');
-  } else {
-    // User canceled the picker
-    print("No file selected");
+      print('File Name: ${file.name}');
+      print('File Size: ${file.size}');
+      print('File Path: ${file.path}');
+    } else {
+      // User canceled the picker
+      print("No file selected");
+    }
   }
-}
-
 }

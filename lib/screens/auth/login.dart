@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
-import '../../network_utils/api.dart'; 
+import '../../utils/api.dart'; 
+import 'package:auto_route/auto_route.dart';
 
-
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+@RoutePage()
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -199,12 +200,16 @@ class _LoginPageState extends State<LoginPage> {
         var body = jsonDecode(res.body);
         if (res.statusCode == 200) {
           SharedPreferences localStorage = await SharedPreferences.getInstance();
-          localStorage.setString('token', jsonEncode(body));
+          localStorage.setString('token', body['data']['accessToken']);
+          localStorage.setString('userData', jsonEncode(body['data']['userData']));
           Navigator.pushReplacementNamed(context, '/'); 
         } else {
+        print(body['message']);
+
           _showError(body['message'] ?? 'Login failed');
         }
       } catch (e) {
+        print(e);
         _showError(e.toString());
       }
 

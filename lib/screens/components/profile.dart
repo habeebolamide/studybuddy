@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:auto_route/auto_route.dart';
 
-class Profile extends StatefulWidget {
-  const Profile({super.key});
+@RoutePage()
+class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({super.key});
 
   @override
-  State<Profile> createState() => _ProfileState();
+  State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileState extends State<Profile> {
+class _ProfileScreenState extends State<ProfileScreen> {
   late double _deviceHeight;
   late double _deviceWidth;
 

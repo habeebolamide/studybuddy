@@ -1,18 +1,29 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:auto_route/auto_route.dart';
 
-class Dashboard extends StatefulWidget {
-  const Dashboard({super.key});
+@RoutePage()
+class DashboardScreen extends StatefulWidget {
+  const DashboardScreen({super.key});
 
   @override
-  State<Dashboard> createState() => _DashboardState();
+  State<DashboardScreen> createState() => _DashboardScreenState();
 }
 
-class _DashboardState extends State<Dashboard> {
+class _DashboardScreenState extends State<DashboardScreen> {
   late double _deviceHeight;
   late double _deviceWidth;
+  Map<String, dynamic>? _user;
 
   @override
+  void initState() {
+    loadData();
+    super.initState();
+  }
+
   Widget build(BuildContext context) {
     _deviceHeight = MediaQuery.of(context).size.height;
     _deviceWidth = MediaQuery.of(context).size.width;
@@ -22,7 +33,7 @@ class _DashboardState extends State<Dashboard> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             _topLayerWidget(),
-            _dashboardActions()
+            _dashboardActions(),
             // Expanded(child: SingleChildScrollView(child:)),
           ],
         ),
@@ -48,7 +59,7 @@ class _DashboardState extends State<Dashboard> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "Welcome\nJames!",
+                " Welcome\n${_user?['name']}!",
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 30,
@@ -79,18 +90,27 @@ class _DashboardState extends State<Dashboard> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            _dashboardCard(FontAwesomeIcons.upload, "Upload", [
-              Color(0xFF6D3EDD),
-              Color(0xFFF052C6),
-            ], _deviceHeight,'/create'),
-            _dashboardCard(FontAwesomeIcons.book, "Create", [
-              Colors.blue,
-              Colors.blue,
-            ], _deviceHeight,'/create'),
-            _dashboardCard(FontAwesomeIcons.brain, "Quiz", [
-              Colors.deepPurple,
-              Colors.deepPurple,
-            ], _deviceHeight,'/create'),
+            _dashboardCard(
+              FontAwesomeIcons.upload,
+              "Upload",
+              [Color(0xFF6D3EDD), Color(0xFFF052C6)],
+              _deviceHeight,
+              '/create',
+            ),
+            _dashboardCard(
+              FontAwesomeIcons.book,
+              "Create",
+              [Colors.blue, Colors.blue],
+              _deviceHeight,
+              '/create',
+            ),
+            _dashboardCard(
+              FontAwesomeIcons.brain,
+              "Quiz",
+              [Colors.deepPurple, Colors.deepPurple],
+              _deviceHeight,
+              '/create',
+            ),
           ],
         ),
       ),
@@ -102,7 +122,7 @@ class _DashboardState extends State<Dashboard> {
     String label,
     List<Color> gradientColors,
     double _deviceHeight,
-    String Url
+    String Url,
   ) {
     return Container(
       decoration: BoxDecoration(
@@ -118,11 +138,8 @@ class _DashboardState extends State<Dashboard> {
         child: InkWell(
           borderRadius: BorderRadius.circular(10),
           onTap: () {
-            Navigator.pushNamed(
-                      context,
-                      Url
-                    );
-            // Navigator.pushReplacementNamed(context, Url); 
+            Navigator.pushNamed(context, Url);
+            // Navigator.pushReplacementNamed(context, Url);
           },
           child: Padding(
             padding: EdgeInsets.symmetric(
@@ -149,7 +166,21 @@ class _DashboardState extends State<Dashboard> {
       ),
     );
   }
+
   Widget Analytics() {
     return Container();
+  }
+
+  void loadData() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    // prefs.clear();
+    String? userData = prefs.getString('userData');
+
+    if (userData != null) {
+      _user = jsonDecode(userData); // decode string to map
+      print('User name: ${_user?['name']}'); // access field from map
+    } else {
+      print('No user data found');
+    }
   }
 }

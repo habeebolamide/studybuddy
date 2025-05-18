@@ -20,11 +20,9 @@ class _LayoutState extends State<Layout> {
   }
 
   static const List<Widget> _pages = <Widget>[
-    Dashboard(),
-    Center(child: Text('Summarize111')),
-    Center(child: Text('Quiz')),
-    Center(child: Text('Progress')),
-    Profile()
+    DashboardScreen(),
+    ProfileScreen()
+    // Profile()
   ];
 
   @override
@@ -42,18 +40,6 @@ class _LayoutState extends State<Layout> {
           BottomNavigationBarItem(
             icon: FaIcon(FontAwesomeIcons.house),
             label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: FaIcon(FontAwesomeIcons.brain),
-            label: 'Summarize',
-          ),
-          BottomNavigationBarItem(
-            icon: FaIcon(FontAwesomeIcons.check),
-            label: 'Quiz',
-          ),
-          BottomNavigationBarItem(
-            icon: FaIcon(FontAwesomeIcons.chartBar),
-            label: 'Progress',
           ),
           BottomNavigationBarItem(
             icon: FaIcon(FontAwesomeIcons.user),
