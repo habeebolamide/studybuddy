@@ -75,6 +75,43 @@ class ProfileRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [QuizPage]
+class QuizRoute extends PageRouteInfo<QuizRouteArgs> {
+  QuizRoute({
+    key,
+    required Map<String, dynamic> note,
+    List<PageRouteInfo>? children,
+  }) : super(
+         QuizRoute.name,
+         args: QuizRouteArgs(key: key, note: note),
+         initialChildren: children,
+       );
+
+  static const String name = 'QuizRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<QuizRouteArgs>();
+      return QuizPage(key: args.key, note: args.note);
+    },
+  );
+}
+
+class QuizRouteArgs {
+  const QuizRouteArgs({this.key, required this.note});
+
+  final key;
+
+  final Map<String, dynamic> note;
+
+  @override
+  String toString() {
+    return 'QuizRouteArgs{key: $key, note: $note}';
+  }
+}
+
+/// generated route for
 /// [RegisterPage]
 class RegisterRoute extends PageRouteInfo<void> {
   const RegisterRoute({List<PageRouteInfo>? children})

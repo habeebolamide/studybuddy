@@ -6,6 +6,7 @@ import '../screens/auth/register.dart';
 import '../screens/components/dashboard.dart';
 import '../screens/components/upload.dart';
 import '../screens/components/profile.dart';
+import '../screens/components/quiz.dart';
 import '../layout.dart';
 
 
@@ -35,6 +36,12 @@ class AppRouter extends RootStackRouter {
         AutoRoute(
           page: LayoutRoute.page,
           path: '/layout',
+          guards: [authGuard],
+        ),
+
+        AutoRoute(
+          page: QuizRoute.page,
+          path: '/take-quiz',
           guards: [authGuard],
         ),
         RedirectRoute(path: '/', redirectTo: '/layout'),

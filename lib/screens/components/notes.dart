@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:studybuddy/routes/app_router.dart';
 import 'package:studybuddy/utils/api.dart';
+import 'package:auto_route/auto_route.dart';
+
 
 class StudyNotes extends StatefulWidget {
   const StudyNotes({super.key});
@@ -87,7 +90,7 @@ class _StudyNotesState extends State<StudyNotes> {
                                   Expanded(
                                     child: ElevatedButton(
                                       onPressed: () {
-                                        // Delete action
+                                        context.router.push(QuizRoute(note:note));
                                       },
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: Colors.white,

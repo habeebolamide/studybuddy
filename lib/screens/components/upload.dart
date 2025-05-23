@@ -28,7 +28,7 @@ class _UploadDocsScreenState extends State<UploadDocsScreen> {
           icon: FaIcon(FontAwesomeIcons.chevronLeft),
           color: Colors.white,
           onPressed: () {
-            Navigator.pop(context);
+            context.router.pop();
           },
         ),
         title: Text("Create Study Plan", style: TextStyle(color: Colors.white)),

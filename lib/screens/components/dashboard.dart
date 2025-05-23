@@ -139,7 +139,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         child: InkWell(
           borderRadius: BorderRadius.circular(10),
           onTap: () {
-             context.router.replace(Url);
+             context.router.push(Url);
             // Navigator.pushReplacementNamed(context, Url);
           },
           child: Padding(
