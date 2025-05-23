@@ -6,6 +6,7 @@ import '../screens/auth/register.dart';
 import '../screens/components/dashboard.dart';
 import '../screens/components/upload.dart';
 import '../screens/components/profile.dart';
+import '../layout.dart';
 
 
 part 'app_router.gr.dart';
@@ -30,5 +31,12 @@ class AppRouter extends RootStackRouter {
           path: '/create',
           guards: [authGuard],
         ),
+
+        AutoRoute(
+          page: LayoutRoute.page,
+          path: '/layout',
+          guards: [authGuard],
+        ),
+        RedirectRoute(path: '/', redirectTo: '/layout'),
       ];
 }

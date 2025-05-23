@@ -27,6 +27,22 @@ class DashboardRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [LayoutScreen]
+class LayoutRoute extends PageRouteInfo<void> {
+  const LayoutRoute({List<PageRouteInfo>? children})
+    : super(LayoutRoute.name, initialChildren: children);
+
+  static const String name = 'LayoutRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const LayoutScreen();
+    },
+  );
+}
+
+/// generated route for
 /// [LoginScreen]
 class LoginRoute extends PageRouteInfo<void> {
   const LoginRoute({List<PageRouteInfo>? children})

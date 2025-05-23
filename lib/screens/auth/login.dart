@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
-import '../../utils/api.dart'; 
+import '../../utils/api.dart';
 import 'package:auto_route/auto_route.dart';
+import '../../routes/app_router.dart';
 
 @RoutePage()
 class LoginScreen extends StatefulWidget {
@@ -33,11 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             _loginLogoWidget(),
-            Expanded(
-              child: SingleChildScrollView(
-                child: _loginFormWidget(),
-              ),
-            ),
+            Expanded(child: SingleChildScrollView(child: _loginFormWidget())),
           ],
         ),
       ),
@@ -49,9 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: SizedBox(
         height: _deviceHeight * 0.38,
         width: _deviceWidth,
-        child: Image.asset(
-          'assets/logo.png',
-        ),
+        child: Image.asset('assets/logo.png'),
       ),
     );
   }
@@ -86,13 +81,16 @@ class _LoginScreenState extends State<LoginScreen> {
                 decoration: InputDecoration(
                   labelText: 'Email',
                   prefixIcon: Icon(Icons.email_outlined),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                   filled: true,
                   fillColor: Colors.grey[50],
                 ),
                 keyboardType: TextInputType.emailAddress,
                 validator: (value) {
-                  if (value == null || value.isEmpty) return 'Please enter your email';
+                  if (value == null || value.isEmpty)
+                    return 'Please enter your email';
                   if (!value.contains('@')) return 'Please enter a valid email';
                   return null;
                 },
@@ -105,21 +103,29 @@ class _LoginScreenState extends State<LoginScreen> {
                   labelText: 'Password',
                   prefixIcon: Icon(Icons.lock_outline),
                   suffixIcon: IconButton(
-                    icon: Icon(_obscurePassword ? Icons.visibility_off : Icons.visibility),
+                    icon: Icon(
+                      _obscurePassword
+                          ? Icons.visibility_off
+                          : Icons.visibility,
+                    ),
                     onPressed: () {
                       setState(() {
                         _obscurePassword = !_obscurePassword;
                       });
                     },
                   ),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                   filled: true,
                   fillColor: Colors.grey[50],
                 ),
                 obscureText: _obscurePassword,
                 validator: (value) {
-                  if (value == null || value.isEmpty) return 'Please enter your password';
-                  if (value.length < 6) return 'Password must be at least 6 characters';
+                  if (value == null || value.isEmpty)
+                    return 'Please enter your password';
+                  if (value.length < 6)
+                    return 'Password must be at least 6 characters';
                   return null;
                 },
               ),
@@ -127,23 +133,23 @@ class _LoginScreenState extends State<LoginScreen> {
               _isLoading
                   ? Center(child: CircularProgressIndicator())
                   : ElevatedButton(
-                      onPressed: _handleLogin,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blueAccent,
-                        padding:  EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      child: const Text(
-                        'Sign In',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
+                    onPressed: _handleLogin,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blueAccent,
+                      padding: EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
                       ),
                     ),
+                    child: const Text(
+                      'Sign In',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
               const SizedBox(height: 16),
               Divider(),
               Row(
@@ -167,7 +173,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   const Text("Don't have an account?"),
                   TextButton(
                     onPressed: () {
-                      Navigator.pushReplacementNamed(context, '/register');
+                      context.router.replace(RegisterRoute());
                     },
                     child: const Text(
                       'Sign Up',
@@ -196,20 +202,26 @@ class _LoginScreenState extends State<LoginScreen> {
       };
 
       try {
-        var res = await Network().authData(data, '/auth/login');
-        var body = jsonDecode(res.body);
-        if (res.statusCode == 200) {
-          SharedPreferences localStorage = await SharedPreferences.getInstance();
-          localStorage.setString('token', body['data']['accessToken']);
-          localStorage.setString('userData', jsonEncode(body['data']['userData']));
-          Navigator.pushReplacementNamed(context, '/'); 
-        } else {
-        print(body['message']);
+        final res = await ApiService.instance.post('/auth/login', data: data);
+        final body = res.data;
 
+        if (res.statusCode == 200) {
+          final SharedPreferences localStorage =
+              await SharedPreferences.getInstance();
+          await localStorage.setString('token', body['data']['token']);
+          await localStorage.setString(
+            'userData',
+            jsonEncode(body['data']['userData']),
+          );
+
+          // Navigate to dashboard
+          context.router.replace(LayoutRoute());
+        } else {
+          print('Error from: ${body['message']}');
           _showError(body['message'] ?? 'Login failed');
         }
       } catch (e) {
-        print(e);
+        print('flutter error: $e');
         _showError(e.toString());
       }
 
@@ -218,8 +230,8 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _showError(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 }

@@ -1,45 +1,34 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Network {
-  final String _url = 'https://102c-41-242-65-1.ngrok-free.app/api/v1'; // Android emulator localhost
-  String? token;
-
-  Future<void> _getToken() async {
-    SharedPreferences localStorage = await SharedPreferences.getInstance();
-    String? storedToken = localStorage.getString('token');
-    if (storedToken != null) {
-      token = jsonDecode(storedToken)['token'];
-    }
-  }
-
-  Future<http.Response> authData(Map<String, dynamic> data, String apiUrl) async {
-    var fullUrl = Uri.parse(_url + apiUrl);
-    return await http.post(
-      fullUrl,
-      body: jsonEncode(data),
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-    );
-  }
-
-  Future<http.Response> getData(String apiUrl) async {
-    await _getToken();
-    var fullUrl = Uri.parse(_url + apiUrl);
-    return await http.get(
-      fullUrl,
-      headers: _setHeaders(),
-    );
-  }
-
-  Map<String, String> _setHeaders() {
-    return {
+class ApiService {
+  static final Dio _dio = Dio(BaseOptions(
+    baseUrl: 'https://da12-41-242-65-1.ngrok-free.app/api/v1',
+    connectTimeout: const Duration(seconds: 10),
+    receiveTimeout: const Duration(seconds: 10),
+    headers: {
       'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': 'Bearer ${token ?? ''}',
-    };
-  }
+    },
+  ))
+    ..interceptors.add(QueuedInterceptorsWrapper(
+      onRequest: (options, handler) async {
+        // Get token from local storage
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        String? token = prefs.getString('token');
+        if (token != null && token.isNotEmpty) {
+          options.headers['Authorization'] = 'Bearer $token';
+        }
+        return handler.next(options);
+      },
+      onResponse: (response, handler) {
+        // print('[RESPONSE] => STATUS: ${response.statusCode}');
+        return handler.next(response);
+      },
+      onError: (DioException e, handler) {
+        // print('[ERROR] => ${e.response?.statusCode}: ${e.message}');
+        return handler.next(e);
+      },
+    ));
+
+  static Dio get instance => _dio;
 }

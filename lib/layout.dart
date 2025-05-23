@@ -2,15 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:studybuddy/screens/components/dashboard.dart';
 import 'package:studybuddy/screens/components/profile.dart';
+import 'package:auto_route/auto_route.dart';
+import 'package:studybuddy/screens/components/notes.dart';
 
-class Layout extends StatefulWidget {
-  const Layout({super.key});
+@RoutePage()
+class LayoutScreen extends StatefulWidget {
+  const LayoutScreen({super.key});
 
   @override
-  State<Layout> createState() => _LayoutState();
+  State<LayoutScreen> createState() => _LayoutScreenState();
 }
 
-class _LayoutState extends State<Layout> {
+class _LayoutScreenState extends State<LayoutScreen> {
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
@@ -21,7 +24,8 @@ class _LayoutState extends State<Layout> {
 
   static const List<Widget> _pages = <Widget>[
     DashboardScreen(),
-    ProfileScreen()
+    StudyNotes(),
+    ProfileScreen(),
     // Profile()
   ];
 
@@ -40,6 +44,10 @@ class _LayoutState extends State<Layout> {
           BottomNavigationBarItem(
             icon: FaIcon(FontAwesomeIcons.house),
             label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: FaIcon(FontAwesomeIcons.book),
+            label: 'StudyNotes',
           ),
           BottomNavigationBarItem(
             icon: FaIcon(FontAwesomeIcons.user),

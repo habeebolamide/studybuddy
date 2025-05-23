@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:studybuddy/routes/app_router.dart';
 import 'dart:convert';
 import '../../utils/api.dart';
 
@@ -306,7 +307,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   const Text("Back To Login?"),
                   TextButton(
                     onPressed: () {
-                      Navigator.pushReplacementNamed(context, '/login');
+                      context.router.replace(LoginRoute());
                     }, // Add navigation to sign up
                     child: const Text(
                       'Sign In',
@@ -344,11 +345,14 @@ class _RegisterPageState extends State<RegisterPage> {
         'password': password,
         'phone': _controller['phone']!.text.trim(),
       };
-      // print(data);
+
       try {
-        var res = await Network().authData(data, '/auth/register-user');
-        var body = jsonDecode(res.body);
-        
+        final res = await ApiService.instance.post(
+          '/auth/register-user',
+          data: data,
+        );
+        final body = res.data;
+
         if (res.statusCode == 200) {
           Navigator.pushReplacementNamed(context, '/login');
         } else {

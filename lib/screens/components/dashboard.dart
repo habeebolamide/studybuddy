@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:studybuddy/routes/app_router.dart';
 
 @RoutePage()
 class DashboardScreen extends StatefulWidget {
@@ -95,21 +96,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
               "Upload",
               [Color(0xFF6D3EDD), Color(0xFFF052C6)],
               _deviceHeight,
-              '/create',
+              UploadDocsRoute(),
             ),
             _dashboardCard(
               FontAwesomeIcons.book,
               "Create",
               [Colors.blue, Colors.blue],
               _deviceHeight,
-              '/create',
+              UploadDocsRoute()
             ),
             _dashboardCard(
               FontAwesomeIcons.brain,
               "Quiz",
               [Colors.deepPurple, Colors.deepPurple],
               _deviceHeight,
-              '/create',
+              UploadDocsRoute()
             ),
           ],
         ),
@@ -122,7 +123,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     String label,
     List<Color> gradientColors,
     double _deviceHeight,
-    String Url,
+    Url,
   ) {
     return Container(
       decoration: BoxDecoration(
@@ -138,7 +139,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         child: InkWell(
           borderRadius: BorderRadius.circular(10),
           onTap: () {
-            Navigator.pushNamed(context, Url);
+             context.router.replace(Url);
             // Navigator.pushReplacementNamed(context, Url);
           },
           child: Padding(
@@ -177,8 +178,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
     String? userData = prefs.getString('userData');
 
     if (userData != null) {
-      _user = jsonDecode(userData); // decode string to map
-      print('User name: ${_user?['name']}'); // access field from map
+     setState(() {
+        _user = jsonDecode(userData); // decode string to map
+      }); // decode string to map
     } else {
       print('No user data found');
     }
