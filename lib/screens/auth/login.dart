@@ -173,7 +173,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   const Text("Don't have an account?"),
                   TextButton(
                     onPressed: () {
-                      context.router.replace(RegisterRoute());
+                      context.router.replace(const RegisterRoute());
                     },
                     child: const Text(
                       'Sign Up',

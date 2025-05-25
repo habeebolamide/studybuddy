@@ -354,7 +354,7 @@ class _RegisterPageState extends State<RegisterPage> {
         final body = res.data;
 
         if (res.statusCode == 200) {
-          Navigator.pushReplacementNamed(context, '/login');
+         context.router.replace(const LoginRoute());
         } else {
           _showError(body['message'] ?? 'Registration failed');
         }

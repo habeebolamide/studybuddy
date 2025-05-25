@@ -75,7 +75,7 @@ class _StudyNotesState extends State<StudyNotes> {
                                   Expanded(
                                     child: ElevatedButton(
                                       onPressed: () {
-                                        // View note action
+                                        context.router.push(ViewNotesRoute(id:note['id']));
                                       },
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: Colors.white,

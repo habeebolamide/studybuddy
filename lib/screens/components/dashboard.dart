@@ -60,7 +60,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                " Welcome\n${_user?['name']}!",
+                " Welcome\n${_user?['uname']}!",
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 30,
@@ -174,7 +174,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   void loadData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    // prefs.clear();
     String? userData = prefs.getString('userData');
 
     if (userData != null) {

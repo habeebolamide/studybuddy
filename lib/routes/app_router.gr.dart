@@ -78,8 +78,8 @@ class ProfileRoute extends PageRouteInfo<void> {
 /// [QuizPage]
 class QuizRoute extends PageRouteInfo<QuizRouteArgs> {
   QuizRoute({
-    key,
-    required Map<String, dynamic> note,
+    Key? key,
+    required Map<Object, dynamic> note,
     List<PageRouteInfo>? children,
   }) : super(
          QuizRoute.name,
@@ -101,9 +101,9 @@ class QuizRoute extends PageRouteInfo<QuizRouteArgs> {
 class QuizRouteArgs {
   const QuizRouteArgs({this.key, required this.note});
 
-  final key;
+  final Key? key;
 
-  final Map<String, dynamic> note;
+  final Map<Object, dynamic> note;
 
   @override
   String toString() {
@@ -141,4 +141,38 @@ class UploadDocsRoute extends PageRouteInfo<void> {
       return const UploadDocsScreen();
     },
   );
+}
+
+/// generated route for
+/// [ViewNotesScreen]
+class ViewNotesRoute extends PageRouteInfo<ViewNotesRouteArgs> {
+  ViewNotesRoute({Key? key, required int id, List<PageRouteInfo>? children})
+    : super(
+        ViewNotesRoute.name,
+        args: ViewNotesRouteArgs(key: key, id: id),
+        initialChildren: children,
+      );
+
+  static const String name = 'ViewNotesRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<ViewNotesRouteArgs>();
+      return ViewNotesScreen(key: args.key, id: args.id);
+    },
+  );
+}
+
+class ViewNotesRouteArgs {
+  const ViewNotesRouteArgs({this.key, required this.id});
+
+  final Key? key;
+
+  final int id;
+
+  @override
+  String toString() {
+    return 'ViewNotesRouteArgs{key: $key, id: $id}';
+  }
 }
