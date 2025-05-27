@@ -1,4 +1,6 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import '../../utils/api.dart';
@@ -206,8 +208,17 @@ class _LoginScreenState extends State<LoginScreen> {
         final body = res.data;
 
         if (res.statusCode == 200) {
+           Fluttertoast.showToast(
+            msg: 'Login Successful',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 4,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 16.0,
+          );
           final SharedPreferences localStorage =
-              await SharedPreferences.getInstance();
+          await SharedPreferences.getInstance();
           await localStorage.setString('token', body['data']['token']);
           await localStorage.setString(
             'userData',
@@ -220,9 +231,17 @@ class _LoginScreenState extends State<LoginScreen> {
           print('Error from: ${body['message']}');
           _showError(body['message'] ?? 'Login failed');
         }
-      } catch (e) {
-        print('flutter error: $e');
-        _showError(e.toString());
+      } on DioException catch (e) {
+        print('flutter error: ${e.response?.data['message']}');
+        Fluttertoast.showToast(
+          msg: '${e.response?.data['message']}',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 4,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
       }
 
       setState(() => _isLoading = false);

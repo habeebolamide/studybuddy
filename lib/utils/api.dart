@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ApiService {
   static final Dio _dio = Dio(
       BaseOptions(
-        baseUrl: 'https://98ed-41-242-65-1.ngrok-free.app/api/v1',
+        baseUrl: 'https://1fba-41-242-65-1.ngrok-free.app/api/v1',
         connectTimeout: const Duration(seconds: 120),
         receiveTimeout: const Duration(seconds: 120),
         headers: {'Content-Type': 'application/json'},
@@ -26,7 +26,7 @@ class ApiService {
           return handler.next(response);
         },
         onError: (DioException e, handler) {
-            print('[ERROR] => DATA: ${e.response}');
+            print('[ERROR] => DATA: ${e.response?.data}');
             return handler.next(e);
         },
       ),

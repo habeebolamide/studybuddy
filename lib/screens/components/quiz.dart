@@ -84,7 +84,9 @@ class _QuizPageState extends State<QuizPage> {
 
                   Expanded(
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        submitQuiz();
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xFF6D3EDD),
                         padding: EdgeInsets.symmetric(vertical: 16),
@@ -112,11 +114,18 @@ class _QuizPageState extends State<QuizPage> {
       );
       final body = res.data;
 
+      Map <Object,dynamic> quizzes = body['data'] ?? [];
+      // print('questions : ${quizzes['questions']}');
+      
       setState(() {
-        _quizzes = body['data'] ?? [];
+        _quizzes = quizzes['questions'] ;
       });
     } catch (e) {
       print('Error: $e');
     }
+  }
+
+  void submitQuiz (){
+    print('answer: ${_selectedAnswers}');
   }
 }
