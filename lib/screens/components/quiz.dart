@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -15,6 +17,7 @@ class QuizPage extends StatefulWidget {
 
 class _QuizPageState extends State<QuizPage> {
   List<dynamic> _quizzes = [];
+  int? quiz_id ;
   Map<int, String?> _selectedAnswers = {};
 
   @override
@@ -81,8 +84,8 @@ class _QuizPageState extends State<QuizPage> {
                     );
                   }).toList(),
                   SizedBox(height: 16),
-
-                  Expanded(
+                  SizedBox(
+                    width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
                         submitQuiz();
@@ -115,9 +118,10 @@ class _QuizPageState extends State<QuizPage> {
       final body = res.data;
 
       Map <Object,dynamic> quizzes = body['data'] ?? [];
-      // print('questions : ${quizzes['questions']}');
+      // print('questions : ${quizzes['id']}');
       
       setState(() {
+        quiz_id = quizzes['id'];
         _quizzes = quizzes['questions'] ;
       });
     } catch (e) {
@@ -125,7 +129,34 @@ class _QuizPageState extends State<QuizPage> {
     }
   }
 
-  void submitQuiz (){
-    print('answer: ${_selectedAnswers}');
+  void submitQuiz () async {
+    if (_selectedAnswers.length != _quizzes.length) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please answer all questions before submitting.')),
+      );
+      return;
+    }
+    List<Map<String, dynamic>> formattedAnswers = _selectedAnswers.entries.map((entry) => {
+      'question_id': entry.key,
+      'selected_answer': entry.value,
+    }).toList();
+
+    var data = {
+      'quiz_id' : quiz_id,
+      'selected_answers' :formattedAnswers
+    };
+
+    try {
+      final res = await ApiService.instance.post(
+        '/studyplan/submit_quiz',
+        data: data 
+      );
+      final body = res.data;
+
+      print('body : ${body}');
+      
+    } catch (e) {
+      print('Error: $e');
+    }
   }
 }
