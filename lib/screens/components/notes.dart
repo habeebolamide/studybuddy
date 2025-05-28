@@ -3,14 +3,16 @@ import 'package:studybuddy/routes/app_router.dart';
 import 'package:studybuddy/utils/api.dart';
 import 'package:auto_route/auto_route.dart';
 
-class StudyNotes extends StatefulWidget {
-  const StudyNotes({super.key});
+
+@RoutePage()
+class StudyNotesPage extends StatefulWidget {
+  const StudyNotesPage({super.key});
 
   @override
-  State<StudyNotes> createState() => _StudyNotesState();
+  State<StudyNotesPage> createState() => _StudyNotesPageState();
 }
 
-class _StudyNotesState extends State<StudyNotes> {
+class _StudyNotesPageState extends State<StudyNotesPage> {
   List<dynamic> _notes = [];
   bool _isLoading = false;
 

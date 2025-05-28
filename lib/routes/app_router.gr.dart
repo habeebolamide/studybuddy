@@ -128,6 +128,22 @@ class RegisterRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [StudyNotesPage]
+class StudyNotesRoute extends PageRouteInfo<void> {
+  const StudyNotesRoute({List<PageRouteInfo>? children})
+    : super(StudyNotesRoute.name, initialChildren: children);
+
+  static const String name = 'StudyNotesRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const StudyNotesPage();
+    },
+  );
+}
+
+/// generated route for
 /// [UploadDocsScreen]
 class UploadDocsRoute extends PageRouteInfo<void> {
   const UploadDocsRoute({List<PageRouteInfo>? children})

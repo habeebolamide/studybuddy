@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:studybuddy/routes/app_router.dart';
 import 'package:studybuddy/utils/api.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -183,15 +184,12 @@ class _UploadDocsScreenState extends State<UploadDocsScreen> {
 
                   SizedBox(height: 16),
 
-                  if(showBtn)
-                  Row(
-                    children: [
-                        TextButton(
-                          onPressed: (){},
-                          child: Text("View Notes")
-                        )
-                    ],
-                  )
+                  if (showBtn)
+                    Row(
+                      children: [
+                        TextButton(onPressed: () {}, child: Text("View Notes")),
+                      ],
+                    ),
                 ],
               ),
             ),
@@ -231,47 +229,48 @@ class _UploadDocsScreenState extends State<UploadDocsScreen> {
         'course_code': _controller['course_code']!.text.trim(),
         'course_description': _controller['course_description']!.text.trim(),
         'uploaded_file': await MultipartFile.fromFile(
-          uploaded_file!.path!,
+          uploaded_file!.path,
           filename: filename,
         ),
       });
 
-      final res = await ApiService.instance.post(
+      await ApiService.instance.post(
         '/studyplan/uploadfile',
         data: formData,
         options: Options(headers: {'Content-Type': 'multipart/form-data'}),
-      );  
-      setState(() => {
-        showBtn = true,
-      });
-
-       Fluttertoast.showToast(
-          msg: 'Study Notes Created Successfully',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 4,
-          backgroundColor: Colors.green,
-          textColor: Colors.white,
-          fontSize: 16.0
       );
-      // print("Response: ${res.data}");
-      // Optionally show a success message or redirect user
-    } on DioException catch (e) {
-      print('Error: ${e}');
+      setState(() => showBtn = true);
+
       Fluttertoast.showToast(
-        msg: '${e.response?.data['error']}',
+        msg: 'Study Notes Created Successfully',
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         timeInSecForIosWeb: 4,
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.green,
         textColor: Colors.white,
-        fontSize: 16.0
-    );
+        fontSize: 16.0,
+      );
+      context.router.replace(StudyNotesRoute());
+
+      // print("Response: ${res.data}");
+      // Optionally show a success message or redirect user
+    } on DioException catch (e) {
+      print('Error: ${e.response}');
+      if (e.response?.data != null ) {
+        Fluttertoast.showToast(
+          msg: '${e.response?.data['error']}',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 4,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      }
     } finally {
       setState(() => _isLoading = false);
     }
   }
-
 
   void _showError(String message) {
     ScaffoldMessenger.of(

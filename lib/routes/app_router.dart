@@ -9,8 +9,8 @@ import '../screens/components/upload.dart';
 import '../screens/components/profile.dart';
 import '../screens/components/quiz.dart';
 import '../screens/components/viewnotes.dart';
+import '../screens/components/notes.dart';
 import '../layout.dart';
-
 
 part 'app_router.gr.dart';
 
@@ -22,36 +22,26 @@ class AppRouter extends RootStackRouter {
 
   @override
   List<AutoRoute> get routes => [
-        AutoRoute(page: LoginRoute.page, path: '/login'),
-        AutoRoute(page: RegisterRoute.page, path: '/register'),
-        AutoRoute(
-          page: DashboardRoute.page,
-          path: '/dashboard',
-          guards: [authGuard],
-        ),
-        AutoRoute(
-          page: UploadDocsRoute.page,
-          path: '/create',
-          guards: [authGuard],
-        ),
+    AutoRoute(page: LoginRoute.page, path: '/login'),
+    AutoRoute(page: RegisterRoute.page, path: '/register'),
 
-        AutoRoute(
-          page: LayoutRoute.page,
-          path: '/layout',
-          guards: [authGuard],
-        ),
+    AutoRoute(
+      page: LayoutRoute.page,
+      initial: true,
+      children: [
+        AutoRoute(page: DashboardRoute.page, guards: [authGuard]),
+        AutoRoute(page: StudyNotesRoute.page, guards: [authGuard]),
+        AutoRoute(page: ProfileRoute.page, guards: [authGuard]),
+      ],
+    ),
+   
+    AutoRoute(page: UploadDocsRoute.page, path: '/create', guards: [authGuard]),
 
-        AutoRoute(
-          page: QuizRoute.page,
-          path: '/take-quiz',
-          guards: [authGuard],
-        ),
+    // AutoRoute(page: LayoutRoute.page, path: '/layout', guards: [authGuard]),
 
-         AutoRoute(
-          page: ViewNotesRoute.page,
-          path: '/view-notes',
-          guards: [authGuard],
-        ),
-        RedirectRoute(path: '/', redirectTo: '/layout'),
-      ];
+    AutoRoute(page: QuizRoute.page, path: '/take-quiz', guards: [authGuard]),
+
+    AutoRoute(page: ViewNotesRoute.page,path: '/view-notes',guards: [authGuard]),
+    // RedirectRoute(path: '/', redirectTo: '/layout'),
+  ];
 }
