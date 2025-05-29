@@ -4,9 +4,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ApiService {
   static final Dio _dio = Dio(
       BaseOptions(
-        baseUrl: 'https://38d8-41-242-65-1.ngrok-free.app/api/v1',
-        connectTimeout: const Duration(seconds: 120),
-        receiveTimeout: const Duration(seconds: 120),
+        baseUrl: 'https://8609-41-242-65-1.ngrok-free.app/api/v1',
+        connectTimeout: const Duration(seconds: 500),
+        receiveTimeout: const Duration(seconds: 500),
         headers: {'Content-Type': 'application/json'},
       ),
     )

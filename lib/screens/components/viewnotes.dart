@@ -16,7 +16,7 @@ class ViewNotesScreen extends StatefulWidget {
 class _ViewNotesScreenState extends State<ViewNotesScreen> {
   List<dynamic> _notes = [];
   bool _isLoading = false;
-  Map<int, bool> showfullText = {};
+  Map<int, bool> showFullText = {};
   @override
   void initState() {
     getNotes();
@@ -67,6 +67,8 @@ class _ViewNotesScreenState extends State<ViewNotesScreen> {
                     ..._notes.asMap().entries.map((entry) {
                       int i = entry.key;
                       var note = entry.value;
+                      bool isExpanded = showFullText[i] ?? false;
+
                       return Card(
                         margin: EdgeInsets.only(bottom: 16),
                         child: Padding(
@@ -76,30 +78,65 @@ class _ViewNotesScreenState extends State<ViewNotesScreen> {
                             children: [
                               Text(
                                 note['topic'],
-                                style: TextStyle(fontSize: 18),
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                               Divider(),
+                              SizedBox(height: 8),
+
                               GestureDetector(
                                 onTap: () {
-                                    setState(() {
-                                      showfullText[i] = !(showfullText[i] ?? false);
-                                    });
+                                  setState(() {
+                                    showFullText[i] = !isExpanded;
+                                  });
                                 },
-                                child: Text(
-                                  note['note'],
-                                  overflow: (showfullText[i] ?? false)
-                                    ? TextOverflow.visible
-                                    : TextOverflow.fade,
-                                  maxLines: (showfullText[i] ?? false) ? null : 2,
-                                  // softWrap: false,
-                                  style: TextStyle(fontSize: 18),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      note['note'],
+                                      overflow:
+                                          isExpanded
+                                              ? TextOverflow.visible
+                                              : TextOverflow.ellipsis,
+                                      maxLines: isExpanded ? null : 2,
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+
+                                    SizedBox(height: 8),
+                                    if (isExpanded) ...[
+                                      SizedBox(height: 16),
+                                      Text(
+                                        "Examples",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Divider(),
+                                      ...(note['examples'] as List<dynamic>)
+                                          .map<Widget>(
+                                            (example) => Padding(
+                                              padding: const EdgeInsets.only(
+                                                bottom: 8.0,
+                                              ),
+                                              child: Text(
+                                                example.toString(),
+                                                style: TextStyle(fontSize: 16),
+                                              ),
+                                            ),
+                                          )
+                                          .toList(),
+                                    ],
+                                  ],
                                 ),
                               ),
                             ],
                           ),
                         ),
                       );
-                    }),
+                    }).toList(),
                 ],
               ),
     );
