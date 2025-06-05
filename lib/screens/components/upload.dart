@@ -233,7 +233,7 @@ class _UploadDocsScreenState extends State<UploadDocsScreen> {
           filename: filename,
         ),
       });
-
+      
       await ApiService.instance.post(
         '/studyplan/uploadfile',
         data: formData,
@@ -242,7 +242,7 @@ class _UploadDocsScreenState extends State<UploadDocsScreen> {
       setState(() => showBtn = true);
 
       Fluttertoast.showToast(
-        msg: 'Study Notes Created Successfully',
+        msg: 'You will be notified when yr notes are ready',
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         timeInSecForIosWeb: 4,
@@ -250,7 +250,7 @@ class _UploadDocsScreenState extends State<UploadDocsScreen> {
         textColor: Colors.white,
         fontSize: 16.0,
       );
-      context.router.replace(StudyNotesRoute());
+      context.router.replace(DashboardRoute());
 
       // print("Response: ${res.data}");
       // Optionally show a success message or redirect user

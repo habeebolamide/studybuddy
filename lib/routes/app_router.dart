@@ -33,6 +33,7 @@ class AppRouter extends RootStackRouter {
         AutoRoute(page: StudyNotesRoute.page, guards: [authGuard]),
         AutoRoute(page: ProfileRoute.page, guards: [authGuard]),
       ],
+      guards: [authGuard]
     ),
    
     AutoRoute(page: UploadDocsRoute.page, path: '/create', guards: [authGuard]),

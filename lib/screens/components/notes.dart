@@ -18,8 +18,8 @@ class _StudyNotesPageState extends State<StudyNotesPage> {
 
   @override
   void initState() {
-    getNotes();
     super.initState();
+    getNotes();
   }
 
   @override

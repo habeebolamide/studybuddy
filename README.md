@@ -1,16 +1,43 @@
-# studybuddy
+# 📱 StudyBuddy – Flutter App
 
-A new Flutter project.
+**StudyBuddy** is a mobile learning companion that uses AI to simplify complex study materials and generate quizzes from uploaded PDFs. This is the Flutter frontend of the app, built to provide a clean, responsive, and interactive user experience.
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+## ✨ Features
 
-A few resources to get you started if this is your first Flutter project:
+- 📄 Upload PDF study materials
+- 🤖 AI-powered content summarization
+- 🧠 Auto-generated quizzes
+- 🧪 Take interactive quizzes
+- 🔐 User registration and login
+- 📱 Mobile-friendly design
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+---
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## 🧰 Tech Stack
+
+- Flutter & Dart
+- auto_route (navigation)
+- Riverpod or Provider (state management)
+- Dio (HTTP client)
+- File Picker & PDF Viewer
+- Laravel (backend API)
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Flutter SDK
+- Android Studio / VS Code
+- Laravel backend (see [StudyBuddy Laravel Backend](https://github.com/habeebolamide/studybuddyapi.git))
+
+### Installation
+
+```bash
+git clone https://github.com/habeebolamide/studybuddy.git
+cd studybuddy
+flutter pub get
+flutter run
