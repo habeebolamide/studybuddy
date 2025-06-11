@@ -1,9 +1,12 @@
 import 'dart:convert';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:linear_progress_bar/linear_progress_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:studybuddy/helpers/notification_helper.dart';
 import 'package:studybuddy/routes/app_router.dart';
 
 @RoutePage()
@@ -23,21 +26,84 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void initState() {
     loadData();
     super.initState();
+
+    FirebaseMessaging.onMessage.listen((message) {
+      showLocalNotification(message);
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((message) {
+      final id = message.data['study_plan_id'];
+      if (id != null) {
+        context.router.replace(
+          ViewNotesRoute(id: id),
+        ); // Or pass args if needed
+      }
+    });
   }
 
   Widget build(BuildContext context) {
     _deviceHeight = MediaQuery.of(context).size.height;
     _deviceWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      body: Container(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _topLayerWidget(),
-            _dashboardActions(),
-            // Expanded(child: SingleChildScrollView(child:)),
-          ],
-        ),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _topLayerWidget(),
+                SizedBox(height: _deviceHeight * 0.015),
+                _dashboardActions(),
+                SizedBox(height: _deviceHeight * 0.015),
+                _recentUploads(),
+                SizedBox(height: _deviceHeight * 0.015),
+                Analytics(),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _recentUploads() {
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: _deviceWidth * 0.02,
+        vertical: _deviceHeight * 0.015,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Recent Uploads",
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 24,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 20),
+          MediaQuery.removePadding(
+            context: context,
+            removeTop: true,
+            child: ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: 2,
+              itemBuilder: (context, index) {
+                return Card(
+                  child: ListTile(
+                    leading: Icon(Icons.file_present, color: Colors.red),
+                    title: Text("Document ${index + 1}"),
+                    subtitle: Text("Uploaded on ${DateTime.now().toString()}"),
+                  ),
+                );
+              },
+            ),
+          )
+
+        ],
       ),
     );
   }
@@ -81,39 +147,46 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget _dashboardActions() {
-    return Container(
-      child: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: _deviceWidth * 0.02,
-          vertical: _deviceHeight * 0.06,
-        ),
-
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            _dashboardCard(
-              FontAwesomeIcons.upload,
-              "Upload",
-              [Color(0xFF6D3EDD), Color(0xFFF052C6)],
-              _deviceHeight,
-              UploadDocsRoute(),
-            ),
-            _dashboardCard(
-              FontAwesomeIcons.book,
-              "Create",
-              [Colors.blue, Colors.blue],
-              _deviceHeight,
-              UploadDocsRoute()
-            ),
-            _dashboardCard(
-              FontAwesomeIcons.brain,
-              "Quiz",
-              [Colors.deepPurple, Colors.deepPurple],
-              _deviceHeight,
-              UploadDocsRoute()
-            ),
-          ],
-        ),
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: _deviceWidth * 0.02,
+        vertical: _deviceHeight * 0.015,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start, // Align text to the left
+        children: [
+          Text(
+            'Dashboard Actions',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 20), // Spacing between text and cards
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _dashboardCard(
+                FontAwesomeIcons.upload,
+                "Upload",
+                [Color(0xFF6D3EDD), Color(0xFFF052C6)],
+                _deviceHeight,
+                UploadDocsRoute(),
+              ),
+              _dashboardCard(
+                FontAwesomeIcons.book,
+                "Create",
+                [Colors.blue, Colors.blue],
+                _deviceHeight,
+                UploadDocsRoute(),
+              ),
+              _dashboardCard(
+                FontAwesomeIcons.brain,
+                "Quiz",
+                [Colors.deepPurple, Colors.deepPurple],
+                _deviceHeight,
+                UploadDocsRoute(),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -139,7 +212,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         child: InkWell(
           borderRadius: BorderRadius.circular(10),
           onTap: () {
-             context.router.push(Url);
+            context.router.push(Url);
             // Navigator.pushReplacementNamed(context, Url);
           },
           child: Padding(
@@ -169,7 +242,66 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget Analytics() {
-    return Container();
+    return Container(
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: _deviceWidth * 0.02,
+          vertical: _deviceHeight * 0.015,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Quiz Analytics",
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 24,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(height: 20),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(15),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withAlpha(100),
+                    spreadRadius: 1,
+                    blurRadius: 5,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: Column(
+                children: [
+                  const Text(
+                    'You\'ve completed 3/5 quizzes',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  LinearProgressBar(
+                    maxSteps: 5,
+                    progressType:
+                        LinearProgressBar
+                            .progressTypeLinear, // Use Linear progress
+                    currentStep: 3,
+                    progressColor: Color(0xFFF052C6),
+                    backgroundColor: Colors.grey[50],
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   void loadData() async {
@@ -177,7 +309,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     String? userData = prefs.getString('userData');
 
     if (userData != null) {
-     setState(() {
+      setState(() {
         _user = jsonDecode(userData); // decode string to map
       }); // decode string to map
     } else {
