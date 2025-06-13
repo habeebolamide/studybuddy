@@ -1,13 +1,14 @@
 import 'dart:convert';
 
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:linear_progress_bar/linear_progress_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:auto_route/auto_route.dart';
-import 'package:studybuddy/helpers/notification_helper.dart';
+
 import 'package:studybuddy/routes/app_router.dart';
+import 'package:studybuddy/utils/api.dart';
 
 @RoutePage()
 class DashboardScreen extends StatefulWidget {
@@ -21,24 +22,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
   late double _deviceHeight;
   late double _deviceWidth;
   Map<String, dynamic>? _user;
+  Map<String, dynamic>? _analytics ;
+  bool _isLoading = false;
 
   @override
   void initState() {
     loadData();
+    analytics();
     super.initState();
-
-    FirebaseMessaging.onMessage.listen((message) {
-      showLocalNotification(message);
-    });
-
-    FirebaseMessaging.onMessageOpenedApp.listen((message) {
-      final id = message.data['study_plan_id'];
-      if (id != null) {
-        context.router.replace(
-          ViewNotesRoute(id: id),
-        ); // Or pass args if needed
-      }
-    });
   }
 
   Widget build(BuildContext context) {
@@ -52,12 +43,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _topLayerWidget(),
-                SizedBox(height: _deviceHeight * 0.015),
+                SizedBox(height: _deviceHeight * 0.01),
                 _dashboardActions(),
-                SizedBox(height: _deviceHeight * 0.015),
+                SizedBox(height: _deviceHeight * 0.01),
                 _recentUploads(),
-                SizedBox(height: _deviceHeight * 0.015),
-                Analytics(),
+                SizedBox(height: _deviceHeight * 0.01),
+                quizAnalytics(),
               ],
             ),
           ),
@@ -70,7 +61,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: _deviceWidth * 0.02,
-        vertical: _deviceHeight * 0.015,
+        // vertical: _deviceHeight * 0.015,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -90,13 +81,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
             child: ListView.builder(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
-              itemCount: 2,
+              itemCount: _analytics?['recent_uploads']?.length ?? 0,
               itemBuilder: (context, index) {
+                  final recentUploads = _analytics?['recent_uploads'] ?? {};
+                  final item = recentUploads[index];
                 return Card(
                   child: ListTile(
                     leading: Icon(Icons.file_present, color: Colors.red),
-                    title: Text("Document ${index + 1}"),
-                    subtitle: Text("Uploaded on ${DateTime.now().toString()}"),
+                    title: Text(item['course_title'] ?? 'Untitled Document'),
+                    subtitle: Text('Uploaded on ${DateFormat.yMMMd().format(DateTime.parse(item['created_at']))}'),
                   ),
                 );
               },
@@ -109,16 +102,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget _topLayerWidget() {
-    return SizedBox(
-      height: _deviceHeight * 0.20,
-      width: _deviceWidth,
-
+  return SizedBox(
+    height: _deviceHeight * 0.25,
+    width: _deviceWidth,
+    child: ClipPath(
+      clipper: WavyHeaderClipper(),
       child: Container(
-        decoration: BoxDecoration(
+        padding: EdgeInsets.only(
+          top: _deviceHeight * 0.02,
+          left: _deviceWidth * 0.05,
+          right: _deviceWidth * 0.05,
+        ),
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [Color(0xFF6D3EDD), Color(0xFFF052C6)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
-          borderRadius: BorderRadius.only(bottomRight: Radius.circular(45.0)),
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 35.0, vertical: 35.0),
@@ -126,15 +126,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                " Welcome\n${_user?['uname']}!",
-                style: TextStyle(
+                " Welcome,\n${_user?['uname']}!",
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 30,
-                  fontWeight: FontWeight.w900,
+                  letterSpacing: 1.2,
+                  fontWeight: FontWeight.w400,
                 ),
               ),
-
-              CircleAvatar(
+              const CircleAvatar(
                 radius: 25,
                 backgroundColor: Colors.white,
                 child: Icon(Icons.person, color: Color(0xFF6D3EDD)),
@@ -143,14 +143,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
+
 
   Widget _dashboardActions() {
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: _deviceWidth * 0.02,
-        vertical: _deviceHeight * 0.015,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start, // Align text to the left
@@ -241,7 +242,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget Analytics() {
+  Widget quizAnalytics() {
     return Container(
       child: Padding(
         padding: EdgeInsets.symmetric(
@@ -277,20 +278,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
               child: Column(
                 children: [
-                  const Text(
-                    'You\'ve completed 3/5 quizzes',
+                  Text(
+                    'You\'ve completed ${_analytics?['completed_quizzes_count']} / ${_analytics?['total_quizzes_count']} quizzes',
                     style: TextStyle(
                       fontSize: 16,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.w400,
                       color: Colors.grey,
                     ),
                   ),
+                  SizedBox(height: 12),
                   LinearProgressBar(
-                    maxSteps: 5,
+                    maxSteps: _analytics?['total_quizzes_count'] ?? 1,
                     progressType:
                         LinearProgressBar
                             .progressTypeLinear, // Use Linear progress
-                    currentStep: 3,
+                    currentStep: _analytics?['completed_quizzes_count'] ?? 0, 
+                    minHeight: 15,
                     progressColor: Color(0xFFF052C6),
                     backgroundColor: Colors.grey[50],
                     borderRadius: BorderRadius.circular(10),
@@ -310,10 +313,62 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     if (userData != null) {
       setState(() {
-        _user = jsonDecode(userData); // decode string to map
-      }); // decode string to map
+        _user = jsonDecode(userData); 
+      }); 
     } else {
       print('No user data found');
     }
   }
+
+  void analytics() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final res = await ApiService.instance.get(
+        '/dashboard/analytics',
+      );
+      final body = res.data;
+
+      setState(() {
+        _analytics = body['data'] ?? [];
+      });
+      // print('Analytics data: $_analytics');
+    } catch (e) {
+      print('Error: $e');
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+}
+
+class WavyHeaderClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    Path path = Path();
+    // Start at top left
+    path.lineTo(0, size.height - 40);
+
+    // Create wave using cubic bezier curve
+    path.quadraticBezierTo(
+      size.width / 4, size.height,
+      size.width / 2, size.height - 30,
+    );
+    path.quadraticBezierTo(
+      3 * size.width / 4, size.height - 60,
+      size.width, size.height - 30,
+    );
+
+    // Finish at top right
+    path.lineTo(size.width, 0);
+    path.close();
+
+    return path;
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => false;
 }

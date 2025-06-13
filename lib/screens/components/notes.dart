@@ -106,21 +106,21 @@ class _StudyNotesPageState extends State<StudyNotesPage> {
                                     child: const Text("View Note"),
                                   ),
                                 ),
-                                const SizedBox(width: 16),
-                                Expanded(
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      context.router.push(
-                                        QuizRoute(note: note),
-                                      );
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.white,
-                                      foregroundColor: Color(0xFF6D3EDD),
-                                    ),
-                                    child: const Text("Take Quiz"),
-                                  ),
-                                ),
+                                // const SizedBox(width: 16),
+                                // Expanded(
+                                //   child: ElevatedButton(
+                                //     onPressed: () {
+                                //       context.router.push(
+                                //         QuizRoute(note: note),
+                                //       );
+                                //     },
+                                //     style: ElevatedButton.styleFrom(
+                                //       backgroundColor: Colors.white,
+                                //       foregroundColor: Color(0xFF6D3EDD),
+                                //     ),
+                                //     child: const Text("Take Quiz"),
+                                //   ),
+                                // ),
                               ],
                             ),
                           ],

@@ -202,7 +202,7 @@ class _LoginScreenState extends State<LoginScreen> {
         'email': _emailController.text.trim(),
         'password': _passwordController.text,
       };
-
+      print('Login data: $data');
       try {
         final res = await ApiService.instance.post('/auth/login', data: data);
         final body = res.data;

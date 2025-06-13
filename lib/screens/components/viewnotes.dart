@@ -16,6 +16,7 @@ class ViewNotesScreen extends StatefulWidget {
 class _ViewNotesScreenState extends State<ViewNotesScreen> {
   List<dynamic> _notes = [];
   bool _isLoading = false;
+  bool _quiz_exist = false;
   Map<int, bool> showFullText = {};
   @override
   void initState() {
@@ -137,6 +138,17 @@ class _ViewNotesScreenState extends State<ViewNotesScreen> {
                         ),
                       );
                     }).toList(),
+                
+                  if (!_quiz_exist)
+                  ElevatedButton(
+                    onPressed: (){}, 
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFF6D3EDD),
+                      padding: EdgeInsets.symmetric(vertical: 16),
+                      elevation: 1
+                    ),
+                    child:Text("Generate Quiz",style: TextStyle(color: Colors.white),)
+                  ),
                 ],
               ),
     );
@@ -152,7 +164,8 @@ class _ViewNotesScreenState extends State<ViewNotesScreen> {
       final body = res.data;
       // print('Res data: ${body}');
       setState(() {
-        _notes = body['data'] ?? [];
+        _notes = body['data']['study_notes'] ?? [];
+        _quiz_exist = body['data']['quiz_exists'] ?? false;
         _isLoading = false;
       });
     } catch (e) {
