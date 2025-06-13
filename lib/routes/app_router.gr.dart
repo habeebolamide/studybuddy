@@ -75,40 +75,19 @@ class ProfileRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [QuizPage]
-class QuizRoute extends PageRouteInfo<QuizRouteArgs> {
-  QuizRoute({
-    Key? key,
-    required Map<Object, dynamic> note,
-    List<PageRouteInfo>? children,
-  }) : super(
-         QuizRoute.name,
-         args: QuizRouteArgs(key: key, note: note),
-         initialChildren: children,
-       );
+/// [QuizListPage]
+class QuizListRoute extends PageRouteInfo<void> {
+  const QuizListRoute({List<PageRouteInfo>? children})
+    : super(QuizListRoute.name, initialChildren: children);
 
-  static const String name = 'QuizRoute';
+  static const String name = 'QuizListRoute';
 
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      final args = data.argsAs<QuizRouteArgs>();
-      return QuizPage(key: args.key, note: args.note);
+      return const QuizListPage();
     },
   );
-}
-
-class QuizRouteArgs {
-  const QuizRouteArgs({this.key, required this.note});
-
-  final Key? key;
-
-  final Map<Object, dynamic> note;
-
-  @override
-  String toString() {
-    return 'QuizRouteArgs{key: $key, note: $note}';
-  }
 }
 
 /// generated route for
@@ -141,6 +120,40 @@ class StudyNotesRoute extends PageRouteInfo<void> {
       return const StudyNotesPage();
     },
   );
+}
+
+/// generated route for
+/// [TakeQuizPage]
+class TakeQuizRoute extends PageRouteInfo<TakeQuizRouteArgs> {
+  TakeQuizRoute({Key? key, required int quizid, List<PageRouteInfo>? children})
+    : super(
+        TakeQuizRoute.name,
+        args: TakeQuizRouteArgs(key: key, quizid: quizid),
+        initialChildren: children,
+      );
+
+  static const String name = 'TakeQuizRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<TakeQuizRouteArgs>();
+      return TakeQuizPage(key: args.key, quizid: args.quizid);
+    },
+  );
+}
+
+class TakeQuizRouteArgs {
+  const TakeQuizRouteArgs({this.key, required this.quizid});
+
+  final Key? key;
+
+  final int quizid;
+
+  @override
+  String toString() {
+    return 'TakeQuizRouteArgs{key: $key, quizid: $quizid}';
+  }
 }
 
 /// generated route for

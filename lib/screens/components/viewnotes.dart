@@ -1,6 +1,9 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:studybuddy/routes/app_router.dart';
 import 'package:studybuddy/utils/api.dart';
 
 @RoutePage()
@@ -141,7 +144,9 @@ class _ViewNotesScreenState extends State<ViewNotesScreen> {
                 
                   if (!_quiz_exist)
                   ElevatedButton(
-                    onPressed: (){}, 
+                    onPressed: (){
+                      generateQuiz();
+                    }, 
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xFF6D3EDD),
                       padding: EdgeInsets.symmetric(vertical: 16),
@@ -170,6 +175,48 @@ class _ViewNotesScreenState extends State<ViewNotesScreen> {
       });
     } catch (e) {
       print('Error: $e');
+    }
+  }
+
+  void generateQuiz() async {
+    setState(() => _isLoading = true);
+
+    try {
+      final res = await ApiService.instance.post(
+        '/studyplan/generate_quiz/${widget.id}',
+      );
+      final body = res.data;
+      print('Res data: ${body}');
+      if (body['success']) {
+        Fluttertoast.showToast(
+            msg: 'Quiz generated successfully',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 4,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 16.0,
+          );
+          context.router.replace(TakeQuizRoute(quizid: int.parse(body['data']['quiz_id'].toString())));
+        getNotes();
+      } else {
+        print('Error generating quiz: ${body['message']}');
+      }
+    } on DioException catch (e) {
+      print('Error: ${e.response}');
+      if (e.response?.data != null ) {
+        Fluttertoast.showToast(
+          msg: '${e.response?.data['error']}',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 4,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      }
+    } finally {
+      setState(() => _isLoading = false);
     }
   }
 }

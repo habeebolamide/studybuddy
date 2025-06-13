@@ -183,7 +183,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 "Quiz",
                 [Colors.deepPurple, Colors.deepPurple],
                 _deviceHeight,
-                UploadDocsRoute(),
+                QuizListRoute(),
               ),
             ],
           ),

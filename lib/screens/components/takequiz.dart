@@ -6,18 +6,18 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:studybuddy/utils/api.dart';
 
 @RoutePage()
-class QuizPage extends StatefulWidget {
-  const QuizPage({super.key, required this.note});
+class TakeQuizPage extends StatefulWidget {
+  const TakeQuizPage({super.key, required this.quizid});
 
-  final Map<Object, dynamic> note;
+  final int quizid;
 
   @override
-  State<QuizPage> createState() => _QuizPageState();
+  State<TakeQuizPage> createState() => _TakeQuizPageState();
 }
 
-class _QuizPageState extends State<QuizPage> {
+class _TakeQuizPageState extends State<TakeQuizPage> {
   List<dynamic> _quizzes = [];
-  int? quiz_id ;
+  int? selected_quiz_id ;
   Map<int, String?> _selectedAnswers = {};
 
   @override
@@ -113,7 +113,7 @@ class _QuizPageState extends State<QuizPage> {
   void getQuiz() async {
     try {
       final res = await ApiService.instance.get(
-        '/studyplan/get_quiz/${widget.note['id']}',
+        '/studyplan/get_quiz/${widget.quizid}',
       );
       final body = res.data;
 
@@ -121,7 +121,7 @@ class _QuizPageState extends State<QuizPage> {
       // print('questions : ${quizzes['id']}');
       
       setState(() {
-        quiz_id = quizzes['id'];
+        selected_quiz_id = quizzes['id'];
         _quizzes = quizzes['questions'] ;
       });
     } catch (e) {
@@ -142,7 +142,7 @@ class _QuizPageState extends State<QuizPage> {
     }).toList();
 
     var data = {
-      'quiz_id' : quiz_id,
+      'quiz_id' : selected_quiz_id,
       'selected_answers' :formattedAnswers
     };
 
