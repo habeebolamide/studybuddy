@@ -66,6 +66,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          
+
           Text(
             "Recent Uploads",
             style: TextStyle(
@@ -279,7 +281,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               child: Column(
                 children: [
                   Text(
-                    'You\'ve completed ${_analytics?['completed_quizzes_count']} / ${_analytics?['total_quizzes_count']} quizzes',
+                    'You\'ve completed ${_analytics?['completed_quizzes_count'] ?? 0 } / ${_analytics?['total_quizzes_count'] ?? 0 } quizzes',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w400,
@@ -288,16 +290,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                   SizedBox(height: 12),
                   LinearProgressBar(
-                    maxSteps: _analytics?['total_quizzes_count'] ?? 1,
-                    progressType:
-                        LinearProgressBar
-                            .progressTypeLinear, // Use Linear progress
-                    currentStep: _analytics?['completed_quizzes_count'] ?? 0, 
+                    maxSteps: (_analytics?['total_quizzes_count'] ?? 0) > 0
+                        ? _analytics!['total_quizzes_count']
+                        : 1,
+                    currentStep: _analytics?['completed_quizzes_count'] ?? 0,
                     minHeight: 15,
                     progressColor: Color(0xFFF052C6),
                     backgroundColor: Colors.grey[50],
                     borderRadius: BorderRadius.circular(10),
+                    progressType: LinearProgressBar.progressTypeLinear,
                   ),
+
                 ],
               ),
             ),
